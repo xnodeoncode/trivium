@@ -1,4 +1,4 @@
-var game = {
+const game = {
 
     // the current question index
     currentQuestion: 0,
@@ -52,7 +52,7 @@ var game = {
     nextQuestion:function(){
 
         // is the current question the last question in the array?
-        var startOver = this.gameStart ? true : this.currentQuestion == this.questions.length-1;
+        let startOver = this.gameStart ? true : this.currentQuestion == this.questions.length-1;
 
         // set the game start to false for subsequent iterations.
         this.gameStart = false;
@@ -79,7 +79,7 @@ var game = {
             Iterate over current answers and add a radio button for each answer.
             set the value of the radio button to the index of the answer in the array.
         */
-        for(var i = 0; i < this.questions[ this.currentQuestion ].answers.length; i++){
+        for(let i = 0; i < this.questions[ this.currentQuestion ].answers.length; i++){
 
             this.answerHolder.innerHTML += `<input type='radio' onClick="game.selectAnswer(this.value);" name='answers' value='${i}'>&nbsp;&nbsp;${this.questions[ this.currentQuestion ].answers[i]}</input><br/>`;
         }
@@ -103,7 +103,7 @@ var game = {
             this.messagesHolder.innerHTML = "<div id='incorrectResponseAlert' class='alert alert-danger hide' role='alert'><strong>Oops!</strong> that's incorrect.</div>";
         }
         
-        // wait five seconds then proceed to the next question.
+        // pause, then proceed to the next question.
         wait(2).then(() => {
            this.nextQuestion();
         });
@@ -114,3 +114,4 @@ var game = {
 function wait (time) {
     return new Promise((resolve) => setTimeout(resolve, (time * 1000)));
 }
+

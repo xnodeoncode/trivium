@@ -67,7 +67,7 @@ const game = {
     }
 
     // clear the messages element. This should be passed in and referenced.
-    this.messagesHolder.innerHTML = "";
+    this.messagesHolder.innerHTML = "<div>&nbsp;&nbsp;</div>";
 
     // set the new question text
     this.questionHolder.innerHTML =
@@ -111,7 +111,7 @@ const game = {
     }
 
     // pause, then proceed to the next question.
-    wait(2).then(() => {
+    wait(0.5).then(() => {
       this.nextQuestion();
     });
   },

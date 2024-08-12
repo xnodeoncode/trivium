@@ -30,5 +30,5 @@
 </p>
 <hr />
 <p>
-Version 2 of the application makes use questions from the non-affiliated <a href="https://opentdb.com/" target="_blank">Open Trivia Database</a> api.
+Version 2 of the application makes use of questions from the non-affiliated <a href="https://opentdb.com/" target="_blank">Open Trivia Database</a> api.
 </p>

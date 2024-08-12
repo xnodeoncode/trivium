@@ -1,6 +1,4 @@
-Trivium is a simple quiz application for beginners looking to learn HTML, CSS, and Javascript. The application introduces basic concepts of working with Javascript objects, Arrays, and Promises.
-
-<hr />
+# Trivium
 
 <p>
     Trivium is a simple quiz application for beginners looking to learn

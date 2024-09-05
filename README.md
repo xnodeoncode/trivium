@@ -34,5 +34,5 @@
 Version 2 of the application makes use of questions from the non-affiliated <a href="https://opentdb.com/" target="_blank">Open Trivia Database</a> api.
 </p>
 <p>
-Version 4 was a complete re-code using AngularJS and adds the ability to take up to ten quizzes.
+In version 4 the application is recoded using AngularJS and adds the ability to take up to ten quizzes.
 </p>

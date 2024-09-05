@@ -18,8 +18,8 @@ var app = angular
 app.controller("AppController", async function ($scope, TriviaApiService) {
   // Application properties.
   $scope.appName = "Trivium";
-  $scope.appDescription = "A simple trivia app";
-  $scope.appVersion = "1.0.0";
+  $scope.appDescription = "An HTML, CSS, and Javascript trivia application.";
+  $scope.appVersion = "4.0.2";
 
   // Application resources.
   $scope.htmlDecode = htmlDecode;

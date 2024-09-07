@@ -42,7 +42,7 @@
           </div>
           <div class="row">
             <div class="col">
-               <p class="small-text" id="questionCategory">Category: {{ htmlDecode(currentQuestion.category) }} | Difficulty: {{ currentQuestion.difficulty }} | Type: {{ currentQuestion.type }} | No. Correct: {{ numberCorrect }}</p>
+               <p class="small-text" id="questionCategory">Current Question:  {{ currentQuestionIndex + 1 }} of {{ questions.length }} | Category: {{ htmlDecode(currentQuestion.category) }} | Difficulty: {{ currentQuestion.difficulty }} | Type: {{ currentQuestion.type }} | No. Correct: {{ numberCorrect }} | Current Quiz: {{ currentQuestionSet + 1 }} of {{ questionSets.length }}</p>
             </div>
           </div>
           <div class="row">

@@ -19,7 +19,7 @@ app.controller("AppController", async function ($scope, TriviaApiService) {
   // Application properties.
   $scope.appName = "Trivium";
   $scope.appDescription = "An HTML, CSS, and Javascript trivia application.";
-  $scope.appVersion = "4.0.2";
+  $scope.appVersion = "4.0.3"; // versioning: major.minor.patch (https://semver.org/)
 
   // Application resources.
   $scope.htmlDecode = htmlDecode;

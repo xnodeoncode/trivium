@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="en" ng-app="trivium">
+  <head ng-controller="MetaController">
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <!-- application meta tags -->
+    <meta name="title" content="{{meta.title}}" />
+    <meta name="description" content="{{meta.description}}" />
+    <meta name="keywords" content="{{meta.keywords}}" />
+    <meta name="author" content="{{meta.author}}" />
 
     <!-- Bootstrap CSS -->
     <link
@@ -18,67 +24,230 @@
 
     <link rel="stylesheet" href="./css/styles.css" />
 
-    <title>Trivium</title>
+    <title>{{meta.title}}</title>
   </head>
-  <body ng-app="trivium" ng-controller="AppController">
+  <body ng-controller="AppController">
+
+    <!-- app-container-div -->
     <div class="container h-100">
+
+      <!-- app-title-row -->
       <div class="row top-margin-25">
         <div class="col">
           <h1>{{ appName }}</h1>
           <h3>{{ appDescription }}</h3>
         </div>
       </div>
+      <!-- end-app-title-row -->
+
+      <!-- begin-quiz-questions-row -->
       <div class="row" id="quiz-div" ng-show="showQuiz()">
+
+        <!-- quiz-questions-col -->
         <div class="col">
+
+          <!-- quiz-questions-display-row -->
           <div class="row">
+
+            <!-- quiz-questions-div -->
             <div class="col">
-              <div class="jumbotron my-auto jumbotron-min-height-250">
+              <div class="jumbotron my-auto jumbotron-min-height-250 alert-primary">
                 <!-- holder for the question text -->
                 <div class="questions">
+                  <p class="small-text" id="questionCategory"><span style="font-weight: bold;">{{ htmlDecode(currentQuestion.category) }}</span> | {{ currentQuestion.difficulty }}</p>
                   <h3 id="questionText">{{ htmlDecode(currentQuestion.question) }}</h3>
                 </div>
               </div>
+              <hr />
             </div>
+            <!-- end-quiz-questions-div -->
+
+            <!-- quiz-stats-div -->
+            <div class="col-3">
+              <div class="jumbotron my-auto jumbotron-min-height-250 alert-success" style="padding-bottom: 20px; padding-top: 20px;">
+                <h4>Quiz Results</h3>
+                <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;">
+                  <tr>
+                    <td>Quiz</td>
+                    <td>{{ currentQuestionSet + 1 }} of {{ questionSets.length }}</td>
+                  <tr>
+                    <td>Question</td>
+                    <td>{{ currentQuestionIndex + 1 }} of {{ questions.length }}</td>
+                  </tr>
+                  <tr>
+                    <td>Correct</td>
+                    <td>{{ numberCorrect }}</td>
+                  </tr>
+                  <tr>
+                    <td>Incorrect</td>
+                    <td>{{ numberIncorrect }}</td>
+                  </tr>
+                  <tr>
+                    <td>Score</td>
+                    <td>{{ score + "%" }}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="padding-top: 5px; text-align: center;">
+                      <button class="btn btn-secondary" ng-click="endQuizAndGame()">Show Game Results</button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <!-- end-quiz-stats-div -->
+
           </div>
+          <!-- end-quiz-questions-display-row -->
+
+          <!-- begin-quiz-answers-display-row -->
           <div class="row">
+
+            <!-- begin-answers-display-col -->
             <div class="col">
-               <p class="small-text" id="questionCategory">Current Question:  {{ currentQuestionIndex + 1 }} of {{ questions.length }} | Category: {{ htmlDecode(currentQuestion.category) }} | Difficulty: {{ currentQuestion.difficulty }} | Type: {{ currentQuestion.type }} | No. Correct: {{ numberCorrect }} | Current Quiz: {{ currentQuestionSet + 1 }} of {{ questionSets.length }}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col top-margin-10">
-              <p>
                 <ul class="ul-no-bullets">
                   <li ng-repeat="a in currentQuestion.answers">
                     <input type="radio" title="{{a}}" id="{{a}}" value="{{a}}" name="answers" ng-click="checkAnswer(a)" />
                     <label>{{ htmlDecode(a) }}</label>
                   </li>
                 </ul>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row" id="results-div" ng-show="showResults()">
-        <div class="col">
-          <div class="jumbotron my-auto jumbotron-min-height-250">
-            <h3>Results</h3>
-            <p>
-              You scored {{ score + "%" }} out of {{ questions.length }} questions.
-            </p>
-            <div class="row">
-              <div class="col">
-              <button class="btn btn-secondary" ng-click="restartQuiz()">Retake</button>
-              <button class="btn btn-primary" ng-show="!isLastQuiz()" ng-click="nextQuiz()">Next Quiz</button>
-              </div>
-                <div class="col">
-                  <button class="btn btn-success" ng-show="isLastQuiz()" ng-click="restartGame()">Restart Game</button>
+                <div id="response-alert" class="col">
                 </div>
-              </div>
+            </div>
+            <!-- end-answers-display-col -->
+            
           </div>
+          <!-- end-quiz-answers-display-row -->
+
         </div>
+        <!-- end-quiz-questions-col -->
+
       </div>
+      <!-- end-quiz-questions-row -->
+
+      <!-- begin-quiz-results-row -->
+      <div class="row" id="results-div" ng-show="showResults()">
+        
+        <!-- begin-quiz-results-col -->
+        <div class="col">
+
+          <!-- begin-results-display-row -->
+          <div class="row">
+
+            <!-- begin-results-display-col -->
+            <div class="col">
+
+              <!-- begin-results-jumbotron -->
+              <div class="jumbotron my-auto jumbotron-min-height-250">
+                <h3>Results</h3>
+                <p>
+                  You scored {{ score + "%" }} out of {{ questions.length }} questions.
+                </p>
+                <p>
+                  <button class="btn btn-secondary" ng-click="restartQuiz()">Retake</button>
+                  <button class="btn btn-primary" ng-show="!isLastQuiz()" ng-click="nextQuiz()">Next Quiz</button>
+                </p>
+              </div>
+              <!-- end-results-jumbotron -->
+
+            </div>
+            <!-- end-results-display-col -->
+
+            <!-- begin-results-stats-col-3 -->
+            <div class="col-3">
+
+              <!-- begin-results-stats-jumbotron -->
+              <div class="jumbotron my-auto jumbotron-min-height-250 alert-success" style="padding-bottom: 20px; padding-top: 20px;">
+                <h4>Quiz Stats</h3>
+                <table style="width: 100%;">
+                  <tr>
+                    <td>Quiz</td>
+                    <td>{{ currentQuestionSet + 1 }} of {{ questionSets.length }}</td>
+                  <tr>
+                    <td>Question</td>
+                    <td>{{ currentQuestionIndex + 1 }} of {{ questions.length }}</td>
+                  </tr>
+                  <tr>
+                    <td>Correct</td>
+                    <td>{{ numberCorrect }}</td>
+                  </tr>
+                  <tr>
+                    <td>Incorrect</td>
+                    <td>{{ numberIncorrect }}</td>
+                  </tr>
+                  <tr>
+                    <td>Score</td>
+                    <td>{{ score + "%" }}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="padding-top: 5px; text-align: center;">
+                      <button class="btn btn-secondary" ng-click="endGame()">Show Results</button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <!-- end-results-stats-jumbotron -->
+
+            </div>
+            <!-- end-results-stats-col-3 -->
+
+          </div>
+          <!-- end-quiz-results-display-row -->
+
+        </div>
+        <!-- end-quiz-results-col -->
+
+      </div>
+      <!-- end-quiz-results-row -->
+
+      <!-- begin-game-results-row -->
+      <div class="row" id="game-results-div" ng-show="showGameResults()">
+
+        <!-- begin-game-results-col -->
+        <div class="col">
+
+          <!-- begin-game-results-jumbotron -->
+          <div class="jumbotron my-auto jumbotron-min-height-250">
+            <h3>Game Results</h3>
+              <table style="width: 100%;" ng-repeat="quiz in quizResults">
+                <tr>
+                  <td>Quiz</td>
+                  <td>{{ quiz.id + 1 }}</td>
+                <tr>
+                  <td>Number of Questions</td>
+                  <td>{{ quiz.questions.length }}</td>
+                </tr>
+                <tr>
+                  <td>Correct</td>
+                  <td>{{ quiz.numberCorrect }}</td>
+                </tr>
+                <tr>
+                  <td>Incorrect</td>
+                  <td>{{ quiz.numberIncorrect }}</td>
+                </tr>
+                <tr>
+                  <td>Score</td>
+                  <td>{{ quiz.score + "%" }}</td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="padding-top: 5px; text-align: center;">
+                    <hr />
+                  </td>
+                </tr>
+              </table>
+              <p>
+                <button class="btn btn-primary" ng-click="restartGame()">Restart Game</button>
+              </p>
+          </div>
+          <!-- end-game-results-jumbotron -->
+
+        </div>
+        <!-- end-game-results-col -->
+
+      </div>
+      <!-- end-game-results-row -->
+
     </div>
+    <!-- end-app-container-div -->
       
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

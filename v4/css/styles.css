@@ -22,10 +22,23 @@
   min-height: 250px;
 }
 
+.jumbotron-min-height-325 {
+  min-height: 325px;
+}
+
 .small-text {
   font-size: 0.8em;
 }
 
 .ul-no-bullets {
   list-style-type: none;
+}
+
+.game-results-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.question-category {
+  font-weight: bold;
 }

@@ -10,7 +10,12 @@ August 12, 2024
 
 ### V4
 
-September 05, 2024
+September 05, 2024 - 4.0.3
 
 - Implemented question sets. Allowing up to ten quiz attempts.
 - Re-coded to us AngularJS.
+
+September 08, 2024 - 4.1.0
+
+- Introduced versioning in the format of milestone.feature.fix.
+- Added Quiz Stats and Game Results views.

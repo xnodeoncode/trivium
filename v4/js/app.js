@@ -3,12 +3,24 @@
 import { DefaultQuestions } from "./services/questions.js";
 import { shuffleArray, htmlDecode } from "./modules/utils.js";
 import { TriviaService } from "./services/triviaService.js";
+import { QuizResult } from "./modules/quizResult.js";
 
 var app = angular
   .module("trivium", [])
   .service("TriviaApiService", function () {
     return new TriviaService();
   });
+
+app.controller("MetaController", function ($scope) {
+  $scope.meta = {
+    title: "Trivium",
+    description: "An HTML, CSS, and Javascript trivia game.",
+    keyWords: "trivia, game, html, css, javascript",
+    author: "Bacardi Bryant",
+    date: "2020-06-03",
+    version: "4.1.0",
+  };
+});
 
 /********************************************************************
  * AppController | void: This controller manages the application.
@@ -18,8 +30,8 @@ var app = angular
 app.controller("AppController", async function ($scope, TriviaApiService) {
   // Application properties.
   $scope.appName = "Trivium";
-  $scope.appDescription = "An HTML, CSS, and Javascript trivia application.";
-  $scope.appVersion = "4.0.2";
+  $scope.appDescription = "An HTML, CSS, and Javascript trivia game.";
+  $scope.appVersion = "4.1.0"; // versioning: milestone.feature.fix (a spin-off of semantic versioning taken from https://semver.org/)
 
   // Application resources.
   $scope.htmlDecode = htmlDecode;
@@ -41,8 +53,13 @@ app.controller("AppController", async function ($scope, TriviaApiService) {
   $scope.currentQuestionIndex = 0;
   $scope.currentQuestion = $scope.questions[$scope.currentQuestionIndex];
   $scope.numberCorrect = 0;
+  $scope.numberIncorrect = 0;
   $scope.score = ($scope.numberCorrect / $scope.questions.length) * 100;
   $scope.quizOver = false;
+  $scope.quizResults = new Array(new QuizResult(0, $scope.questions, 0, 0));
+  $scope.gameOver = false;
+
+  console.log("Quiz Results", $scope.quizResults);
 
   // Application methods.
 
@@ -55,8 +72,26 @@ app.controller("AppController", async function ($scope, TriviaApiService) {
     $scope.currentQuestionIndex++;
     if ($scope.currentQuestionIndex >= $scope.questions.length) {
       $scope.quizOver = true;
+
+      // if the quiz is over, create a new QuizResult object and add it to the quizResults array.
+      let quizResult = new QuizResult(
+        $scope.currentQuestionSet,
+        $scope.questions,
+        $scope.numberCorrect,
+        $scope.numberIncorrect
+      );
+
+      $scope.addQuizResult(quizResult);
+
+      console.log("Quiz Results", $scope.quizResults);
+
       $scope.showResults();
     }
+
+    if ($scope.currentQuestionSet >= $scope.questionSets.length) {
+      $scope.showGameResults();
+    }
+
     $scope.currentQuestion = $scope.questions[$scope.currentQuestionIndex];
   };
 
@@ -68,8 +103,44 @@ app.controller("AppController", async function ($scope, TriviaApiService) {
   $scope.checkAnswer = function (answer) {
     if (answer === $scope.currentQuestion.correct_answer) {
       $scope.numberCorrect++;
+      $scope.showCorrect(true);
+    } else {
+      $scope.numberIncorrect++;
+      $scope.showCorrect(false);
     }
     $scope.nextQuestion();
+  };
+
+  $scope.showCorrect = function (correct) {
+    let element = document.getElementById("response-alert");
+    element.style.display = "block";
+    if (correct) {
+      element.innerHTML =
+        "<div id='correctResponseAlert' class='alert alert-success hide' role='alert'><strong>Awesome!</strong> that's correct.</div>";
+      //element.style.backgroundColor = "green";
+      //element.innerHTML = "Correct!";
+    } else {
+      element.innerHTML =
+        "<div id='incorrectResponseAlert' class='alert alert-danger hide' role='alert'><strong>Oops!</strong> that's incorrect.</div>";
+      //element.style.backgroundColor = "red";
+      //element.innerHTML = "Incorrect!";
+    }
+    setTimeout(() => {
+      element.style.display = "none";
+    }, 1000);
+  };
+
+  $scope.addQuizResult = function (quizResult) {
+    // if the quizResult already exists in the quizResults array, remove it.
+    let id = parseInt(quizResult.id);
+    let quizResultId = $scope.quizResults.findIndex(
+      (result) => result.id === id
+    );
+    if (quizResultId >= 0) {
+      $scope.quizResults.splice(quizResultId, 1);
+    }
+    // add the quizResult to the quizResults array.
+    $scope.quizResults.push(quizResult);
   };
 
   /********************************************************************
@@ -82,7 +153,27 @@ app.controller("AppController", async function ($scope, TriviaApiService) {
       ($scope.numberCorrect / $scope.questions.length) * 100
     );
 
-    return $scope.quizOver === true;
+    return $scope.quizOver === true && $scope.gameOver === false;
+  };
+
+  $scope.endGame = function () {
+    $scope.gameOver = true;
+  };
+
+  $scope.endQuizAndGame = function () {
+    let quizResult = new QuizResult(
+      $scope.currentQuestionSet,
+      $scope.questions,
+      $scope.numberCorrect,
+      $scope.numberIncorrect
+    );
+    $scope.addQuizResult(quizResult);
+    $scope.quizOver = true;
+    $scope.gameOver = true;
+  };
+
+  $scope.showGameResults = function () {
+    return $scope.gameOver === true;
   };
 
   /********************************************************************
@@ -105,6 +196,7 @@ app.controller("AppController", async function ($scope, TriviaApiService) {
     $scope.currentQuestionIndex = 0;
     $scope.score = 0;
     $scope.numberCorrect = 0;
+    $scope.numberIncorrect = 0;
     $scope.questions = $scope.shuffleArray(
       $scope.questionSets[$scope.currentQuestionSet]
     );
@@ -144,6 +236,8 @@ app.controller("AppController", async function ($scope, TriviaApiService) {
    * @returns: void
    * ********************************************************************/
   $scope.restartGame = () => {
+    $scope.quizResults = new Array(new QuizResult(0, $scope.questions, 0, 0));
+    $scope.gameOver = false;
     $scope.currentQuestionSet = 0;
     $scope.shuffleArray($scope.questionSets);
     $scope.restartQuiz();

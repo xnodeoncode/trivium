@@ -11,14 +11,14 @@ var app = angular
     return new TriviaService();
   });
 
-app.controller("MetaController", function ($scope) {
+app.controller("MetaTagsController", function ($scope) {
   $scope.meta = {
     title: "Trivium",
     description: "An HTML, CSS, and Javascript trivia game.",
     keyWords: "trivia, game, html, css, javascript",
     author: "Bacardi Bryant",
     date: "2020-06-03",
-    version: "4.1.0",
+    version: "4.1.1", // versioning: milestone.feature.fix (a spin-off of semantic versioning taken from https://semver.org/)
   };
 });
 
@@ -28,15 +28,12 @@ app.controller("MetaController", function ($scope) {
  * @returns: void
  * ********************************************************************/
 app.controller("AppController", async function ($scope, TriviaApiService) {
-  // Application properties.
-  $scope.appName = "Trivium";
-  $scope.appDescription = "An HTML, CSS, and Javascript trivia game.";
-  $scope.appVersion = "4.1.0"; // versioning: milestone.feature.fix (a spin-off of semantic versioning taken from https://semver.org/)
-
   // Application resources.
   $scope.htmlDecode = htmlDecode;
   $scope.shuffleArray = shuffleArray;
   $scope.service = TriviaApiService;
+  $scope.appTitle = "Trivium";
+  $scope.appDescription = "An HTML, CSS, and Javascript trivia game.";
 
   // Application default data.
   $scope.questionSets = new Array(DefaultQuestions);
@@ -58,8 +55,6 @@ app.controller("AppController", async function ($scope, TriviaApiService) {
   $scope.quizOver = false;
   $scope.quizResults = new Array(new QuizResult(0, $scope.questions, 0, 0));
   $scope.gameOver = false;
-
-  console.log("Quiz Results", $scope.quizResults);
 
   // Application methods.
 

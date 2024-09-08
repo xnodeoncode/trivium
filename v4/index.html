@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="trivium">
-  <head ng-controller="MetaController">
+  <head ng-controller="MetaTagsController">
     <meta charset="UTF-8" />
     <meta
       name="viewport"
@@ -13,6 +13,7 @@
     <meta name="description" content="{{meta.description}}" />
     <meta name="keywords" content="{{meta.keywords}}" />
     <meta name="author" content="{{meta.author}}" />
+    <meta name="version" content="{{meta.version}}" />
 
     <!-- Bootstrap CSS -->
     <link
@@ -34,7 +35,7 @@
       <!-- app-title-row -->
       <div class="row top-margin-25">
         <div class="col">
-          <h1>{{ appName }}</h1>
+          <h1>{{ appTitle }}</h1>
           <h3>{{ appDescription }}</h3>
         </div>
       </div>
@@ -51,10 +52,10 @@
 
             <!-- quiz-questions-div -->
             <div class="col">
-              <div class="jumbotron my-auto jumbotron-min-height-250 alert-primary">
+              <div class="jumbotron my-auto jumbotron-min-height-325 alert-primary">
                 <!-- holder for the question text -->
                 <div class="questions">
-                  <p class="small-text" id="questionCategory"><span style="font-weight: bold;">{{ htmlDecode(currentQuestion.category) }}</span> | {{ currentQuestion.difficulty }}</p>
+                  <p class="small-text" id="questionCategory"><span class="question-category">{{ htmlDecode(currentQuestion.category) }}</span> | {{ currentQuestion.difficulty }}</p>
                   <h3 id="questionText">{{ htmlDecode(currentQuestion.question) }}</h3>
                 </div>
               </div>
@@ -64,9 +65,9 @@
 
             <!-- quiz-stats-div -->
             <div class="col-3">
-              <div class="jumbotron my-auto jumbotron-min-height-250 alert-success" style="padding-bottom: 20px; padding-top: 20px;">
+              <div class="jumbotron my-auto jumbotron-min-height-325 alert-success">
                 <h4>Quiz Results</h3>
-                <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;">
+                <table class="game-results-div">
                   <tr>
                     <td>Quiz</td>
                     <td>{{ currentQuestionSet + 1 }} of {{ questionSets.length }}</td>
@@ -86,12 +87,9 @@
                     <td>Score</td>
                     <td>{{ score + "%" }}</td>
                   </tr>
-                  <tr>
-                    <td colspan="2" style="padding-top: 5px; text-align: center;">
-                      <button class="btn btn-secondary" ng-click="endQuizAndGame()">Show Game Results</button>
-                    </td>
-                  </tr>
                 </table>
+                <hr />
+                  <button class="btn btn-secondary" ng-click="endQuizAndGame()">Show Game Results</button>
               </div>
             </div>
             <!-- end-quiz-stats-div -->
@@ -137,7 +135,7 @@
             <div class="col">
 
               <!-- begin-results-jumbotron -->
-              <div class="jumbotron my-auto jumbotron-min-height-250">
+              <div class="jumbotron my-auto jumbotron-min-height-325">
                 <h3>Results</h3>
                 <p>
                   You scored {{ score + "%" }} out of {{ questions.length }} questions.
@@ -156,9 +154,9 @@
             <div class="col-3">
 
               <!-- begin-results-stats-jumbotron -->
-              <div class="jumbotron my-auto jumbotron-min-height-250 alert-success" style="padding-bottom: 20px; padding-top: 20px;">
+              <div class="jumbotron my-auto jumbotron-min-height-325 alert-success">
                 <h4>Quiz Stats</h3>
-                <table style="width: 100%;">
+                <table class="game-results-div">
                   <tr>
                     <td>Quiz</td>
                     <td>{{ currentQuestionSet + 1 }} of {{ questionSets.length }}</td>
@@ -178,12 +176,9 @@
                     <td>Score</td>
                     <td>{{ score + "%" }}</td>
                   </tr>
-                  <tr>
-                    <td colspan="2" style="padding-top: 5px; text-align: center;">
-                      <button class="btn btn-secondary" ng-click="endGame()">Show Results</button>
-                    </td>
-                  </tr>
                 </table>
+                <hr />
+                <button class="btn btn-secondary" ng-click="endGame()">Show Results</button>
               </div>
               <!-- end-results-stats-jumbotron -->
 
@@ -206,9 +201,9 @@
         <div class="col">
 
           <!-- begin-game-results-jumbotron -->
-          <div class="jumbotron my-auto jumbotron-min-height-250">
+          <div class="jumbotron my-auto jumbotron-min-height-325">
             <h3>Game Results</h3>
-              <table style="width: 100%;" ng-repeat="quiz in quizResults">
+              <table class="game-results-table" ng-repeat="quiz in quizResults">
                 <tr>
                   <td>Quiz</td>
                   <td>{{ quiz.id + 1 }}</td>
@@ -229,7 +224,7 @@
                   <td>{{ quiz.score + "%" }}</td>
                 </tr>
                 <tr>
-                  <td colspan="2" style="padding-top: 5px; text-align: center;">
+                  <td colspan="2">
                     <hr />
                   </td>
                 </tr>
